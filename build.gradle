@@ -49,6 +49,7 @@ springBoot {
 	mainClass = "ru.nsu.fit.directors.orderservice.OrderServiceApplication"
 }
 
+
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"

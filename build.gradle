@@ -41,7 +41,7 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
-	compileOnly 'org.springframework.kafka:spring-kafka'
+	implementation 'org.springframework.kafka:spring-kafka'
 	runtimeOnly 'com.netflix.eureka:eureka-client'
 }
 

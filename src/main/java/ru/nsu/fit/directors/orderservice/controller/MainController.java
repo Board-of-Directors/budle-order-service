@@ -32,6 +32,7 @@ public class MainController {
      *                For details of order dto you can watch OrderDTO class.
      */
     @PostMapping
+    @Deprecated
     public void create(
         @RequestBody @Valid RequestOrderDto request,
         Long userId,
@@ -48,6 +49,7 @@ public class MainController {
      * @param userId  from what user we create request (will be deleted)
      */
     @DeleteMapping
+    @Deprecated
     public void delete(
         @RequestParam Long orderId,
         @RequestParam Long userId
@@ -63,6 +65,7 @@ public class MainController {
      * @return list of order dto.
      */
     @GetMapping
+    @Deprecated
     public List<ResponseOrderDto> getByUser(
         @RequestParam Long userId,
         @RequestParam(required = false) Integer status
@@ -71,6 +74,7 @@ public class MainController {
     }
 
     @GetMapping(value = "/establishment")
+    @Deprecated
     public List<ResponseOrderDto> getByEstablishment(
         @RequestParam Long establishmentId,
         @RequestParam(required = false) Integer status

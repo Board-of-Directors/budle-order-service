@@ -43,6 +43,7 @@ dependencies {
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	implementation 'org.springframework.kafka:spring-kafka'
 	runtimeOnly 'com.netflix.eureka:eureka-client'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 }
 
 springBoot {

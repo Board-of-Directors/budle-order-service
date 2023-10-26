@@ -1,7 +1,7 @@
 package ru.nsu.fit.directors.orderservice.service;
 
 import jakarta.transaction.Transactional;
-import ru.nsu.fit.directors.orderservice.dto.request.OrderCreatedEvent;
+import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 
 import javax.annotation.ParametersAreNonnullByDefault;

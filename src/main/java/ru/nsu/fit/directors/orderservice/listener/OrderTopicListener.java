@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import ru.nsu.fit.directors.orderservice.dto.request.OrderCreatedEvent;
+import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
 import ru.nsu.fit.directors.orderservice.event.OrderCancelledEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderStatusChangedEvent;

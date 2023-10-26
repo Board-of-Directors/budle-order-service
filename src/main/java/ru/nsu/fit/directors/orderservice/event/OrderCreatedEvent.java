@@ -1,4 +1,4 @@
-package ru.nsu.fit.directors.orderservice.dto.request;
+package ru.nsu.fit.directors.orderservice.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;

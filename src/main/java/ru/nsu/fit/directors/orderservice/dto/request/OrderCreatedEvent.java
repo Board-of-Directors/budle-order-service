@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestOrderDto {
+public class OrderCreatedEvent {
     @Min(value = 1, message = "Заказ не может быть на отрицательное количество людей.")
     private Integer guestCount;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

@@ -4,32 +4,31 @@ import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.directors.orderservice.OrderRepository;
-import ru.nsu.fit.directors.orderservice.dto.request.RequestOrderDto;
+import ru.nsu.fit.directors.orderservice.dto.request.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
-import ru.nsu.fit.directors.orderservice.exception.NotEnoughRightsException;
 import ru.nsu.fit.directors.orderservice.exception.OrderNotFoundException;
 import ru.nsu.fit.directors.orderservice.mapper.OrderMapper;
 import ru.nsu.fit.directors.orderservice.model.Order;
+import ru.nsu.fit.directors.orderservice.repository.OrderRepository;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@ParametersAreNonnullByDefault
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
     @Override
-    public void createOrder(RequestOrderDto dto, Long userId, Long establishmentId) {
-        log.info("Creating order {}", dto);
-        Order order = orderMapper.toEntity(dto)
+    public void createOrder(OrderCreatedEvent event, Long userId, Long establishmentId) {
+        log.info("Creating order {}", event);
+        Order order = orderMapper.toEntity(event)
             .setGuestId(userId)
             .setEstablishmentId(establishmentId);
         orderRepository.save(order);
@@ -37,14 +36,12 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
+    @Nonnull
     public List<ResponseOrderDto> getUserOrders(Integer status, Long userId) {
-        log.info("Getting user orders");
+        log.info("Getting orders for user {} with status {}", userId, status);
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues();
-        Example<Order> exampleQuery = Example.of(new Order(userId, orderStatus), matcher);
-        List<Order> orders = orderRepository.findAll(exampleQuery);
-        log.info("Result: " + orders);
-        return orders.stream()
+        return orderRepository.findAllByUserAndStatus(userId, orderStatus)
+            .stream()
             .map(orderMapper::toResponse)
             .toList();
     }
@@ -52,24 +49,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Nonnull
     public List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status) {
-        log.info("Getting orders for establishment {}", establishmentId);
-        return orderRepository.findAllByEstablishmentId(establishmentId).stream()
+        log.info("Getting orders for establishment {} with status {}", establishmentId, status);
+        OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
+        return orderRepository.findAllByEstablishmentAndStatus(establishmentId, orderStatus)
+            .stream()
             .map(orderMapper::toResponse)
             .toList();
-    }
-
-    @Override
-    @Transactional
-    public void deleteOrder(Long orderId, Long userId) {
-        log.info("Deleting order {} by user {}", orderId, userId);
-        Order order = getOrderById(orderId);
-
-        if (order.getGuestId().equals(userId)) {
-            orderRepository.delete(order);
-        } else {
-            log.warn("Not enough right for this operation");
-            throw new NotEnoughRightsException();
-        }
     }
 
     @Override
@@ -91,6 +76,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order.setStatus(OrderStatus.getStatusByInteger(status)));
     }
 
+    @Nonnull
     private Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));

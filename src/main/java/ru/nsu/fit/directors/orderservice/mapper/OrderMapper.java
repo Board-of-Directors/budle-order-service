@@ -4,7 +4,7 @@ import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.nsu.fit.directors.orderservice.dto.request.RequestOrderDto;
+import ru.nsu.fit.directors.orderservice.dto.request.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.model.Order;
 
@@ -28,20 +28,20 @@ public class OrderMapper {
         final Converter<LocalTime, Time> converterTime = (src) ->
             Time.valueOf(src.getSource().plusMinutes(bookingDurationMinutes));
 
-        mapper.createTypeMap(RequestOrderDto.class, Order.class)
+        mapper.createTypeMap(OrderCreatedEvent.class, Order.class)
             .addMappings(mapping -> mapping.using(converterToStartTime)
                 .map(
-                    RequestOrderDto::getTime,
+                    OrderCreatedEvent::getTime,
                     Order::setStartTime
                 ))
             .addMappings(mapping -> mapping.using(converterTime)
-                .map(RequestOrderDto::getTime, Order::setEndTime))
+                .map(OrderCreatedEvent::getTime, Order::setEndTime))
             .addMappings(mapping -> mapping.using(converterDate)
-                .map(RequestOrderDto::getDate, Order::setDate));
+                .map(OrderCreatedEvent::getDate, Order::setDate));
         this.mapper = mapper;
     }
 
-    public Order toEntity(RequestOrderDto dto) {
+    public Order toEntity(OrderCreatedEvent dto) {
         return mapper.map(dto, Order.class);
     }
 

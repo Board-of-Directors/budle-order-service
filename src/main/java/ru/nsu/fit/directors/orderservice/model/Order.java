@@ -10,7 +10,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
 
@@ -19,13 +21,13 @@ import java.sql.Time;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "orders")
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Order {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -13,6 +13,7 @@ import ru.nsu.fit.directors.orderservice.mapper.OrderMapper;
 import ru.nsu.fit.directors.orderservice.model.Order;
 import ru.nsu.fit.directors.orderservice.repository.OrderRepository;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Nonnull
-    public List<ResponseOrderDto> getUserOrders(Integer status, Long userId) {
+    public List<ResponseOrderDto> getUserOrders(@Nullable Integer status, Long userId) {
         log.info("Getting orders for user {} with status {}", userId, status);
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         return orderRepository.findAllByUserAndStatus(userId, orderStatus)
@@ -48,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Nonnull
-    public List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status) {
+    public List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, @Nullable Integer status) {
         log.info("Getting orders for establishment {} with status {}", establishmentId, status);
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         return orderRepository.findAllByEstablishmentAndStatus(establishmentId, orderStatus)

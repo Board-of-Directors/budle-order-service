@@ -8,7 +8,6 @@ import ru.nsu.fit.directors.orderservice.model.Order;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findAllByEstablishmentId(Long establishmentId);
 
     @Query("select o from Order o " +
         "where o.establishmentId = :establishmentId and (o.status = :status or :status is null)")

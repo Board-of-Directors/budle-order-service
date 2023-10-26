@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -42,9 +41,4 @@ public class Order {
     private int duration = 240;
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus status = OrderStatus.WAITING;
-
-    public Order(Long userId, OrderStatus orderStatus){
-        this.guestId = userId;
-        this.status = orderStatus;
-    }
 }

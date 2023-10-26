@@ -18,5 +18,5 @@ public class ResponseOrderDto {
     private Time endTime;
     private Integer status;
     private Long establishmentId;
-    private String username;
+    private String guestName;
 }

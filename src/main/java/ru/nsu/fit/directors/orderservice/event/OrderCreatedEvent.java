@@ -22,4 +22,5 @@ public class OrderCreatedEvent {
     private Long establishmentId;
     private Long userId;
     private Long spotId;
+    private String guestName;
 }

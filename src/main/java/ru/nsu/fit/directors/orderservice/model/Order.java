@@ -37,6 +37,7 @@ public class Order {
     private Long establishmentId;
     private Long guestId;
     private Long spotId;
+    private String guestName;
     @Transient
     private int duration = 240;
     @Enumerated(EnumType.ORDINAL)

@@ -1,4 +1,3 @@
-drop table if exists orders cascade;
 create table orders
 (
     id               bigserial not null,
@@ -10,5 +9,10 @@ create table orders
     end_time         time      not null,
     status           smallint default 0,
     guest_count      int       not null,
+    guest_name       varchar   not null,
     primary key (id)
 );
+
+create index status_index on orders(status);
+create index establishment_index on orders(establishment_id);
+create index user_index on orders(guest_id);

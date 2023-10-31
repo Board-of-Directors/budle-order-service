@@ -7,12 +7,17 @@ import java.util.Objects;
 
 @Getter
 public enum OrderStatus {
-    WAITING(0), ACCEPTED(1), REJECTED(2), CANCELLED(3);
+    WAITING(0, "В ожидании"),
+    ACCEPTED(1, "Подтверждена"),
+    REJECTED(2, "Отклонена"),
+    CANCELLED(3, "Отменена");
 
     private final Integer status;
+    private final String message;
 
-    OrderStatus(int status) {
+    OrderStatus(int status, String message) {
         this.status = status;
+        this.message = message;
     }
 
     public static OrderStatus getStatusByInteger(Integer status) {

@@ -4,10 +4,12 @@ import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
+import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
+import ru.nsu.fit.directors.orderservice.event.OrderNotificationEvent;
 import ru.nsu.fit.directors.orderservice.exception.OrderNotFoundException;
 import ru.nsu.fit.directors.orderservice.mapper.OrderMapper;
 import ru.nsu.fit.directors.orderservice.model.Order;
@@ -25,6 +27,7 @@ import java.util.Objects;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final KafkaTemplate<String, OrderNotificationEvent> notificationKafka;
 
     @Override
     public void createOrder(OrderCreatedEvent event, Long userId, Long establishmentId) {
@@ -66,7 +69,15 @@ public class OrderServiceImpl implements OrderService {
         if (!Objects.equals(order.getEstablishmentId(), establishmentId)) {
             return;
         }
-        orderRepository.save(order.setStatus(OrderStatus.getStatusByInteger(status)));
+        OrderStatus orderStatus = OrderStatus.getStatusByInteger(status);
+        orderRepository.save(order.setStatus(orderStatus));
+        notificationKafka.send(
+            "notificationTopic",
+            new OrderNotificationEvent(
+                "Ваша бронь была %s администратором".formatted(orderStatus.getMessage().toLowerCase()),
+                order.getGuestId()
+            )
+        );
     }
 
     @Override

@@ -70,14 +70,16 @@ public class OrderServiceImpl implements OrderService {
             return;
         }
         OrderStatus orderStatus = OrderStatus.getStatusByInteger(status);
-        orderRepository.save(order.setStatus(orderStatus));
-        notificationKafka.send(
-            "notificationTopic",
-            new OrderNotificationEvent(
-                "Ваша бронь была %s администратором".formatted(orderStatus.getMessage().toLowerCase()),
-                order.getGuestId()
-            )
-        );
+        if (orderStatus.isAllowedByEstablishment() && orderStatus.getAllowedFrom().contains(order.getStatus())) {
+            orderRepository.save(order.setStatus(orderStatus));
+            notificationKafka.send(
+                "notificationTopic",
+                new OrderNotificationEvent(
+                    orderStatus.getNotification(),
+                    order.getGuestId()
+                )
+            );
+        }
     }
 
     @Override
@@ -85,7 +87,10 @@ public class OrderServiceImpl implements OrderService {
     public void setStatus(Long orderId, Integer status) {
         log.info("Setting order {} status to {}", orderId, status);
         Order order = getOrderById(orderId);
-        orderRepository.save(order.setStatus(OrderStatus.getStatusByInteger(status)));
+        OrderStatus nextStatus = OrderStatus.getStatusByInteger(status);
+        if (nextStatus.isAllowedByUser() && nextStatus.getAllowedFrom().contains(order.getStatus())) {
+            orderRepository.save(order.setStatus(OrderStatus.getStatusByInteger(status)));
+        }
     }
 
     @Nonnull

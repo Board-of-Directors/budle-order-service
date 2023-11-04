@@ -1,6 +1,7 @@
 package ru.nsu.fit.directors.orderservice.service;
 
 import jakarta.transaction.Transactional;
+import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 
@@ -38,7 +39,7 @@ public interface OrderService {
      * @return list of the orders
      */
 
-    List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status);
+    List<EstablishmentResponseOrderDto> getEstablishmentOrders(Long establishmentId, Integer status);
 
     /**
      * Setting the status of the current order.

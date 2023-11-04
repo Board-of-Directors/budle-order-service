@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.service.OrderService;
 
@@ -44,7 +45,7 @@ public class MainController {
      */
 
     @GetMapping(value = "/establishment")
-    public List<ResponseOrderDto> getByEstablishment(
+    public List<EstablishmentResponseOrderDto> getByEstablishment(
         @RequestParam Long establishmentId,
         @RequestParam(required = false) Integer status
     ) {

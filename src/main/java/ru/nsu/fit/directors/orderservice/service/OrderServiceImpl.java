@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
@@ -52,12 +53,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Nonnull
-    public List<ResponseOrderDto> getEstablishmentOrders(Long establishmentId, @Nullable Integer status) {
+    public List<EstablishmentResponseOrderDto> getEstablishmentOrders(Long establishmentId, @Nullable Integer status) {
         log.info("Getting orders for establishment {} with status {}", establishmentId, status);
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         return orderRepository.findAllByEstablishmentAndStatus(establishmentId, orderStatus)
             .stream()
-            .map(orderMapper::toResponse)
+            .map(orderMapper::toEstablishmentResponse)
             .toList();
     }
 

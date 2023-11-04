@@ -14,49 +14,63 @@ public enum OrderStatus {
         "В ожидании",
         Collections.emptyList(),
         "Пользователь %s создал бронь в вашем заведении.",
-        false
+        false,
+        List.of(UserAction.CANCEL),
+        List.of(BusinessAction.ACCEPT, BusinessAction.REJECT)
     ),
     ACCEPTED(
         1,
         "Одобрена",
         List.of(WAITING),
         "Администратор одобрил вашу бронь.",
-        true
+        true,
+        List.of(UserAction.CANCEL),
+        List.of(BusinessAction.REQUEST_CONFIRMATION, BusinessAction.REJECT)
     ),
     REJECTED(
         2,
         "Отклонена",
         List.of(WAITING),
         "Администратор отклонил вашу бронь.",
-        true
+        true,
+        Collections.emptyList(),
+        List.of(BusinessAction.ACCEPT)
     ),
     WAITING_FOR_CONFIRMATION(
         3,
         "Ждет подтверждения от пользователя",
         List.of(ACCEPTED),
         "Администратор запросил подтверждение вашей брони. Подтвердите, что точно придете.",
-        true
+        true,
+        List.of(UserAction.CANCEL, UserAction.CONFIRM),
+        Collections.emptyList()
     ),
     CANCELLED(
         4,
         "Отменена",
         List.of(WAITING, ACCEPTED, WAITING_FOR_CONFIRMATION),
         "Пользователь %s отменил свою бронь.",
-        false
+        false,
+        Collections.emptyList(),
+        Collections.emptyList()
     ),
     CONFIRMED(
         5,
         "Подтверждена",
         List.of(WAITING_FOR_CONFIRMATION),
         "Пользователь %s подтвердил, что точно придет.",
-        false
+        false,
+        Collections.emptyList(),
+        Collections.emptyList()
     ),
     ARCHIVED(
         6,
         "В архиве",
         Collections.emptyList(),
         "Бронь была помещена в архив.",
-        false
+        false,
+        Collections.emptyList(),
+        Collections.emptyList()
     );
 
     private final Integer status;
@@ -65,14 +79,26 @@ public enum OrderStatus {
     private final String notification;
     private final boolean allowedByEstablishment;
     private final boolean allowedByUser;
+    private final List<UserAction> userActions;
+    private final List<BusinessAction> businessActions;
 
-    OrderStatus(int status, String message, List<OrderStatus> allowedFrom, String notification, boolean allowedByEstablishment) {
+    OrderStatus(
+        int status,
+        String message,
+        List<OrderStatus> allowedFrom,
+        String notification,
+        boolean allowedByEstablishment,
+        List<UserAction> userActions,
+        List<BusinessAction> businessActions
+    ) {
         this.status = status;
         this.message = message;
         this.allowedFrom = allowedFrom;
         this.notification = notification;
         this.allowedByEstablishment = allowedByEstablishment;
         this.allowedByUser = !allowedByEstablishment;
+        this.userActions = userActions;
+        this.businessActions = businessActions;
     }
 
     public static OrderStatus getStatusByInteger(Integer status) {

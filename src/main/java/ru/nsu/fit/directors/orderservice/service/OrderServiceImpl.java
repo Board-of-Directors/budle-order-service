@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         return orderRepository.findAllByUserAndStatus(userId, orderStatus)
             .stream()
-            .map(orderMapper::toResponse)
+            .map(orderMapper::toUserResponse)
             .toList();
     }
 

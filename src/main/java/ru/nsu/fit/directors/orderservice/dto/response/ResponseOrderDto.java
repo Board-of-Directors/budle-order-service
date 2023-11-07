@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import ru.nsu.fit.directors.orderservice.enums.UserAction;
 
 import java.sql.Time;
 import java.util.Date;
@@ -25,5 +24,5 @@ public class ResponseOrderDto {
     private Integer status;
     private Long establishmentId;
     private String guestName;
-    private List<UserAction> userActionList;
+    private List<ActionDto> userActionList;
 }

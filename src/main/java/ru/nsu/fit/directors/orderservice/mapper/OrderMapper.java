@@ -1,14 +1,18 @@
 package ru.nsu.fit.directors.orderservice.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.nsu.fit.directors.orderservice.dto.response.ActionDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
+import ru.nsu.fit.directors.orderservice.enums.BusinessAction;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
+import ru.nsu.fit.directors.orderservice.enums.UserAction;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.model.Order;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 
 @Component
 public class OrderMapper {
@@ -26,14 +30,15 @@ public class OrderMapper {
             .setEstablishmentId(dto.getEstablishmentId());
     }
 
-    public ResponseOrderDto toResponse(Order order) {
+    public ResponseOrderDto toUserResponse(Order order) {
         return new ResponseOrderDto().setId(order.getId())
             .setStatus(order.getStatus().getStatus())
             .setGuestCount(order.getGuestCount())
             .setDate(order.getDate())
             .setGuestName(order.getGuestName())
             .setStartTime(order.getStartTime())
-            .setEndTime(order.getEndTime());
+            .setEndTime(order.getEndTime())
+            .setUserActionList(toUserActionDto(order.getStatus().getUserActions()));
     }
 
     public EstablishmentResponseOrderDto toEstablishmentResponse(Order order) {
@@ -43,6 +48,19 @@ public class OrderMapper {
             .setDate(order.getDate())
             .setGuestName(order.getGuestName())
             .setStartTime(order.getStartTime())
-            .setEndTime(order.getEndTime());
+            .setEndTime(order.getEndTime())
+            .setBusinessActions(toBusinessActionDto(order.getStatus().getBusinessActions()));
+    }
+
+    private List<ActionDto> toBusinessActionDto(List<BusinessAction> actions) {
+        return actions.stream()
+            .map(action -> new ActionDto(action.getActionName(), action.getNextStatus()))
+            .toList();
+    }
+
+    private List<ActionDto> toUserActionDto(List<UserAction> actions) {
+        return actions.stream()
+            .map(action -> new ActionDto(action.getActionName(), action.getNextStatus()))
+            .toList();
     }
 }

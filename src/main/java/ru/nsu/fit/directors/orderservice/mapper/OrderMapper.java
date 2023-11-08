@@ -2,6 +2,7 @@ package ru.nsu.fit.directors.orderservice.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.directors.orderservice.dto.response.ActionDto;
+import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.BusinessAction;
@@ -30,14 +31,19 @@ public class OrderMapper {
             .setEstablishmentId(dto.getEstablishmentId());
     }
 
-    public ResponseOrderDto toUserResponse(Order order) {
+    public ResponseOrderDto toUserResponse(Order order, EstablishmentDto establishmentDto) {
         return new ResponseOrderDto().setId(order.getId())
             .setStatus(order.getStatus().getStatus())
             .setGuestCount(order.getGuestCount())
+            .setEstablishmentId(order.getEstablishmentId())
             .setDate(order.getDate())
             .setGuestName(order.getGuestName())
             .setStartTime(order.getStartTime())
             .setEndTime(order.getEndTime())
+            .setName(establishmentDto.name())
+            .setCuisineCountry(establishmentDto.cuisineCountry())
+            .setRating(establishmentDto.rating())
+            .setImage(establishmentDto.image())
             .setUserActionList(toUserActionDto(order.getStatus().getUserActions()));
     }
 

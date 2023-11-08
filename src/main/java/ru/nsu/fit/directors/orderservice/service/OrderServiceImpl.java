@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.directors.orderservice.api.EstablishmentApi;
+import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
@@ -29,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final KafkaTemplate<String, OrderNotificationEvent> notificationKafka;
+    private final EstablishmentApi establishmentApi;
 
     @Override
     public void createOrder(OrderCreatedEvent event, Long userId, Long establishmentId) {
@@ -47,8 +50,15 @@ public class OrderServiceImpl implements OrderService {
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         return orderRepository.findAllByUserAndStatus(userId, orderStatus)
             .stream()
-            .map(orderMapper::toUserResponse)
+            .map(order -> orderMapper.toUserResponse(order, getEstablishmentById(order.getEstablishmentId())))
             .toList();
+    }
+
+    private EstablishmentDto getEstablishmentById(Long establishmentId) {
+        return establishmentApi.syncGetWithParams(
+            uriBuilder -> uriBuilder.path("/establishment").queryParam("establishmentId", establishmentId).build(),
+            EstablishmentDto.class
+        );
     }
 
     @Override

@@ -25,4 +25,8 @@ public class ResponseOrderDto {
     private Long establishmentId;
     private String guestName;
     private List<ActionDto> userActionList;
+    private String rating;
+    private String image;
+    private String name;
+    private String cuisineCountry;
 }

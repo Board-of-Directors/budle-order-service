@@ -1,6 +1,7 @@
 package ru.nsu.fit.directors.orderservice.dto.response;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -14,6 +15,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class BaseResponse<T> {
     private T result;
     private ResponseException exception;

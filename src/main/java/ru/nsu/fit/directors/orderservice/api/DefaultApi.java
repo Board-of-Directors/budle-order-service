@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.Function;
 
 public interface DefaultApi {
-
     @Nullable
     <T> T syncGetWithParams(Function<UriBuilder, URI> uriBuilder, ParameterizedTypeReference<BaseResponse<T>> reference);
 

@@ -13,7 +13,7 @@ import java.util.function.Function;
 public interface DefaultApi {
 
     @Nullable
-    <T> T syncGetWithParams(Function<UriBuilder, URI> uriBuilder, Class<T> type);
+    <T> T syncGetWithParams(Function<UriBuilder, URI> uriBuilder, ParameterizedTypeReference<BaseResponse<T>> reference);
 
     @Nullable
     <T> List<T> syncListGetWithParams(Function<UriBuilder, URI> uriBuilder, ParameterizedTypeReference<BaseResponse<List<T>>> reference);

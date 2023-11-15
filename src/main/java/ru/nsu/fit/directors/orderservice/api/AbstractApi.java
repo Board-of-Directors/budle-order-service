@@ -25,9 +25,10 @@ public class AbstractApi implements DefaultApi {
     }
 
     @Nullable
-    public <T> T syncGetWithParams(Function<UriBuilder, URI> uriBuilder, Class<T> type) {
-        ParameterizedTypeReference<BaseResponse<T>> reference = new ParameterizedTypeReference<>() {
-        };
+    public <T> T syncGetWithParams(
+        Function<UriBuilder, URI> uriBuilder,
+        ParameterizedTypeReference<BaseResponse<T>> reference
+    ) {
         return Optional.ofNullable(webClient.build()
                 .get()
                 .uri(uriBuilder)

@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.directors.orderservice.api.EstablishmentApi;
@@ -57,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
     private EstablishmentDto getEstablishmentById(Long establishmentId) {
         return establishmentApi.syncGetWithParams(
             uriBuilder -> uriBuilder.path("/establishment").queryParam("establishmentId", establishmentId).build(),
-            EstablishmentDto.class
+            new ParameterizedTypeReference<>(){}
         );
     }
 

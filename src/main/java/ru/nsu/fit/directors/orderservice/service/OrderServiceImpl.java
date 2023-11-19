@@ -90,7 +90,8 @@ public class OrderServiceImpl implements OrderService {
                 "notificationTopic",
                 new OrderNotificationEvent(
                     orderStatus.getNotification(),
-                    order.getGuestId()
+                    order.getGuestId(),
+                    order.getId()
                 )
             );
         }

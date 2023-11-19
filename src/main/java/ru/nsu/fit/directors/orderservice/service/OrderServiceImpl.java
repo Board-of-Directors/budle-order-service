@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.nsu.fit.directors.orderservice.api.EstablishmentApi;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
-import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
+import ru.nsu.fit.directors.orderservice.dto.response.UserResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderNotificationEvent;
@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Nonnull
-    public List<ResponseOrderDto> getUserOrders(@Nullable Integer status, Long userId) {
+    public List<UserResponseOrderDto> getUserOrders(@Nullable Integer status, Long userId) {
         log.info("Getting orders for user {} with status {}", userId, status);
         OrderStatus orderStatus = status == null ? null : OrderStatus.getStatusByInteger(status);
         return orderRepository.findAllByUserAndStatus(userId, orderStatus)
@@ -55,10 +55,12 @@ public class OrderServiceImpl implements OrderService {
             .toList();
     }
 
+    @Nonnull
     private EstablishmentDto getEstablishmentById(Long establishmentId) {
         return establishmentApi.syncGetWithParams(
             uriBuilder -> uriBuilder.path("/establishment").queryParam("establishmentId", establishmentId).build(),
-            new ParameterizedTypeReference<>(){}
+            new ParameterizedTypeReference<>() {
+            }
         );
     }
 
@@ -103,6 +105,13 @@ public class OrderServiceImpl implements OrderService {
         if (nextStatus.isAllowedByUser() && nextStatus.getAllowedFrom().contains(order.getStatus())) {
             orderRepository.save(order.setStatus(OrderStatus.getStatusByInteger(status)));
         }
+    }
+
+    @Override
+    @Nonnull
+    public UserResponseOrderDto getById(Long id) {
+        Order order = getOrderById(id);
+        return orderMapper.toUserResponse(order, getEstablishmentById(order.getEstablishmentId()));
     }
 
     @Nonnull

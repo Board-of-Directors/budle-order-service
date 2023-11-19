@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
-import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
+import ru.nsu.fit.directors.orderservice.dto.response.UserResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.service.OrderService;
 
 import java.util.List;
@@ -22,6 +22,17 @@ public class MainController {
     private final OrderService orderService;
 
     /**
+     * Internal get request for order by id.
+     *
+     * @param id identifier of seacrhed order
+     * @return order
+     */
+    @GetMapping("/id")
+    public UserResponseOrderDto getById(@RequestParam Long id) {
+        return orderService.getById(id);
+    }
+
+    /**
      * Internal get request, that return all orders of current user.
      *
      * @param userId - from what user we need to find orders
@@ -29,7 +40,7 @@ public class MainController {
      * @return list of order dto
      */
     @GetMapping
-    public List<ResponseOrderDto> getByUser(
+    public List<UserResponseOrderDto> getByUser(
         @RequestParam Long userId,
         @RequestParam(required = false) Integer status
     ) {

@@ -2,8 +2,8 @@ package ru.nsu.fit.directors.orderservice.service;
 
 import jakarta.transaction.Transactional;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
+import ru.nsu.fit.directors.orderservice.dto.response.UserResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
-import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -29,7 +29,7 @@ public interface OrderService {
      * @return list of order dto
      */
 
-    List<ResponseOrderDto> getUserOrders(Integer status, Long userId);
+    List<UserResponseOrderDto> getUserOrders(Integer status, Long userId);
 
     /**
      * Getting all the orders of the establishment with provided parameters.
@@ -59,4 +59,6 @@ public interface OrderService {
 
     @Transactional
     void setStatus(Long orderId, Integer status);
+
+    UserResponseOrderDto getById(Long id);
 }

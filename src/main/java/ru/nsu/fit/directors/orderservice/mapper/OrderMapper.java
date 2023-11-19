@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.nsu.fit.directors.orderservice.dto.response.ActionDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
-import ru.nsu.fit.directors.orderservice.dto.response.ResponseOrderDto;
+import ru.nsu.fit.directors.orderservice.dto.response.UserResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.BusinessAction;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
 import ru.nsu.fit.directors.orderservice.enums.UserAction;
@@ -31,8 +31,8 @@ public class OrderMapper {
             .setEstablishmentId(dto.getEstablishmentId());
     }
 
-    public ResponseOrderDto toUserResponse(Order order, EstablishmentDto establishmentDto) {
-        return new ResponseOrderDto().setId(order.getId())
+    public UserResponseOrderDto toUserResponse(Order order, EstablishmentDto establishmentDto) {
+        return new UserResponseOrderDto().setId(order.getId())
             .setStatus(order.getStatus().getStatus())
             .setGuestCount(order.getGuestCount())
             .setEstablishmentId(order.getEstablishmentId())

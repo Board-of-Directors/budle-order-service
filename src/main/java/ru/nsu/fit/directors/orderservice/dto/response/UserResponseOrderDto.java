@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Setter
 @Accessors(chain = true)
-public class ResponseOrderDto {
+public class UserResponseOrderDto {
     private Long id;
     private Integer guestCount;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

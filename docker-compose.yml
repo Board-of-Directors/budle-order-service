@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  order-service:
+    container_name: order-service
+    image: fagorym/order-service:main
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://10.129.0.26:5432/order_service
+      - SPRING_DISCOVERY_DEFAULT_ZONE=http://10.129.0.34:8181/eureka
+      - SPRING_ZIPKIN_ENDPOINT=http://10.129.0.34:9411/api/v2/spans
+      - SPRING_KAFKA_HOST=http://10.129.0.34:29092
+      - HOST=10.129.0.32
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30

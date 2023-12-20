@@ -4,7 +4,9 @@ public record EstablishmentDto(
     String image,
     String name,
     String cuisineCountry,
-    String rating
+    String rating,
 
+    Integer starsCount,
+    String category
 ) {
 }

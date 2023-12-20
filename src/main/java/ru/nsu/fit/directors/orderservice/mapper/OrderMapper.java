@@ -1,5 +1,6 @@
 package ru.nsu.fit.directors.orderservice.mapper;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.directors.orderservice.dto.response.ActionDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentDto;
@@ -18,6 +19,7 @@ import java.util.List;
 @Component
 public class OrderMapper {
 
+    @Nonnull
     public Order toEntity(OrderCreatedEvent dto) {
         final int bookingDurationTimeMinutes = 240;
         return new Order().setGuestName(dto.getGuestName())
@@ -31,8 +33,15 @@ public class OrderMapper {
             .setEstablishmentId(dto.getEstablishmentId());
     }
 
+    @Nonnull
     public UserResponseOrderDto toUserResponse(Order order, EstablishmentDto establishmentDto) {
         return new UserResponseOrderDto().setId(order.getId())
+            .setName(establishmentDto.name())
+            .setCategory(establishmentDto.category())
+            .setCuisineCountry(establishmentDto.cuisineCountry())
+            .setRating(establishmentDto.rating())
+            .setImage(establishmentDto.image())
+            .setStarsCount(String.valueOf(establishmentDto.starsCount()))
             .setStatus(order.getStatus().getStatus())
             .setGuestCount(order.getGuestCount())
             .setEstablishmentId(order.getEstablishmentId())
@@ -40,13 +49,10 @@ public class OrderMapper {
             .setGuestName(order.getGuestName())
             .setStartTime(order.getStartTime())
             .setEndTime(order.getEndTime())
-            .setName(establishmentDto.name())
-            .setCuisineCountry(establishmentDto.cuisineCountry())
-            .setRating(establishmentDto.rating())
-            .setImage(establishmentDto.image())
             .setUserActionList(toUserActionDto(order.getStatus().getUserActions()));
     }
 
+    @Nonnull
     public EstablishmentResponseOrderDto toEstablishmentResponse(Order order) {
         return new EstablishmentResponseOrderDto().setId(order.getId())
             .setStatus(order.getStatus().getStatus())
@@ -58,12 +64,14 @@ public class OrderMapper {
             .setBusinessActions(toBusinessActionDto(order.getStatus().getBusinessActions()));
     }
 
+    @Nonnull
     private List<ActionDto> toBusinessActionDto(List<BusinessAction> actions) {
         return actions.stream()
             .map(action -> new ActionDto(action.getActionName(), action.getNextStatus()))
             .toList();
     }
 
+    @Nonnull
     private List<ActionDto> toUserActionDto(List<UserAction> actions) {
         return actions.stream()
             .map(action -> new ActionDto(action.getActionName(), action.getNextStatus()))

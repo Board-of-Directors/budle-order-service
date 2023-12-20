@@ -29,4 +29,6 @@ public class UserResponseOrderDto {
     private String image;
     private String name;
     private String cuisineCountry;
+    private String category;
+    private String starsCount;
 }

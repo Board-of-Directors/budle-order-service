@@ -6,9 +6,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.directors.orderservice.dto.response.MessageDto;
 import ru.nsu.fit.directors.orderservice.event.BusinessMessageEvent;
+import ru.nsu.fit.directors.orderservice.event.OrderNotificationEvent;
 import ru.nsu.fit.directors.orderservice.event.UserMessageEvent;
 import ru.nsu.fit.directors.orderservice.exception.OrderNotFoundException;
 import ru.nsu.fit.directors.orderservice.mapper.MessageMapper;
@@ -23,6 +25,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
     private final OrderRepository orderService;
+    private final KafkaTemplate<String, OrderNotificationEvent> notificationKafka;
 
     @Override
     public void save(UserMessageEvent userMessageEvent) {
@@ -36,6 +39,14 @@ public class MessageServiceImpl implements MessageService {
         Order order = orderService.findById(businessMessageEvent.orderId())
             .orElseThrow(() -> new OrderNotFoundException(businessMessageEvent.orderId()));
         messageRepository.save(messageMapper.toModel(businessMessageEvent, order));
+        notificationKafka.send(
+            "notificationTopic",
+            new OrderNotificationEvent(
+                "Received message about booking",
+                order.getGuestId(),
+                order.getId()
+            )
+        );
     }
 
     @Nonnull

@@ -10,6 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.directors.orderservice.dto.response.MessageDto;
 import ru.nsu.fit.directors.orderservice.event.BusinessMessageEvent;
+import ru.nsu.fit.directors.orderservice.event.BusinessOrderNotificationEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderNotificationEvent;
 import ru.nsu.fit.directors.orderservice.event.UserMessageEvent;
 import ru.nsu.fit.directors.orderservice.exception.OrderNotFoundException;
@@ -26,12 +27,21 @@ public class MessageServiceImpl implements MessageService {
     private final MessageMapper messageMapper;
     private final OrderRepository orderService;
     private final KafkaTemplate<String, OrderNotificationEvent> notificationKafka;
+    private final KafkaTemplate<String, BusinessOrderNotificationEvent> orderNotificationKafka;
 
     @Override
     public void save(UserMessageEvent userMessageEvent) {
         Order order = orderService.findById(userMessageEvent.orderId())
             .orElseThrow(() -> new OrderNotFoundException(userMessageEvent.orderId()));
         messageRepository.save(messageMapper.toModel(userMessageEvent, order));
+        orderNotificationKafka.send(
+            "notificationTopic",
+            new BusinessOrderNotificationEvent(
+                order.getEstablishmentId(),
+                order.getId(),
+                "Received message from user"
+            )
+        );
     }
 
     @Override

@@ -12,6 +12,7 @@ import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentDto;
 import ru.nsu.fit.directors.orderservice.dto.response.EstablishmentResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.dto.response.UserResponseOrderDto;
 import ru.nsu.fit.directors.orderservice.enums.OrderStatus;
+import ru.nsu.fit.directors.orderservice.event.BusinessOrderNotificationEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderNotificationEvent;
 import ru.nsu.fit.directors.orderservice.exception.OrderNotFoundException;
@@ -21,6 +22,7 @@ import ru.nsu.fit.directors.orderservice.repository.OrderRepository;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final KafkaTemplate<String, OrderNotificationEvent> notificationKafka;
+    private final KafkaTemplate<String, BusinessOrderNotificationEvent> businessNotificationKafka;
     private final EstablishmentApi establishmentApi;
 
     @Override
@@ -42,7 +45,6 @@ public class OrderServiceImpl implements OrderService {
             .setEstablishmentId(establishmentId);
         orderRepository.save(order);
     }
-
 
     @Override
     @Nonnull
@@ -106,6 +108,14 @@ public class OrderServiceImpl implements OrderService {
         if (nextStatus.isAllowedByUser() && nextStatus.getAllowedFrom().contains(order.getStatus())) {
             orderRepository.save(order.setStatus(OrderStatus.getStatusByInteger(status)));
         }
+        businessNotificationKafka.send(
+            "notificationTopic",
+            new BusinessOrderNotificationEvent(
+                order.getEstablishmentId(),
+                order.getId(),
+                order.getStatus().getNotification()
+            )
+        );
     }
 
     @Override

@@ -2,6 +2,7 @@ package ru.nsu.fit.directors.orderservice.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +35,7 @@ public class Message {
 
     private Long businessId;
 
+    @Column(name = "message_content")
     private String message;
 
     @CreationTimestamp

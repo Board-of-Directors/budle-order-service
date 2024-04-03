@@ -65,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
     public List<MessageDto> getByBusiness(Long orderId, Long businessId) {
         Order order = orderService.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
-        return messageRepository.findAllByOrderAndBusinessId(order, businessId).stream()
+        return messageRepository.findAllByOrder(order).stream()
             .map(messageMapper::toDto)
             .toList();
     }
@@ -75,7 +75,7 @@ public class MessageServiceImpl implements MessageService {
     public List<MessageDto> getByUser(Long orderId, Long userId) {
         Order order = orderService.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
-        return messageRepository.findAllByOrderAndUserId(order, userId).stream()
+        return messageRepository.findAllByOrder(order).stream()
             .map(messageMapper::toDto)
             .toList();
     }

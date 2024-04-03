@@ -11,6 +11,7 @@ import ru.nsu.fit.directors.orderservice.event.OrderCancelledEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderConfirmedEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderCreatedEvent;
 import ru.nsu.fit.directors.orderservice.event.OrderStatusChangedEvent;
+import ru.nsu.fit.directors.orderservice.event.UserMessageEvent;
 import ru.nsu.fit.directors.orderservice.service.MessageService;
 import ru.nsu.fit.directors.orderservice.service.OrderService;
 
@@ -29,6 +30,12 @@ public class OrderTopicListener {
     void handleBusinessMessage(BusinessMessageEvent businessMessageEvent) {
         log.info("Received business message event {}", businessMessageEvent);
         messageService.save(businessMessageEvent);
+    }
+
+    @KafkaHandler
+    void handleUserMessage(UserMessageEvent userMessageEvent) {
+        log.info("Received user message event {}", userMessageEvent);
+        messageService.save(userMessageEvent);
     }
 
     @KafkaHandler

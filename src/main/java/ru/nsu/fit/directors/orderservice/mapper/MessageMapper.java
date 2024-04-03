@@ -16,7 +16,7 @@ public class MessageMapper {
     @Nonnull
     public Message toModel(UserMessageEvent userMessageEvent, Order order) {
         return new Message()
-            .setUserId(userMessageEvent.userId())
+            .setUserId(order.getGuestId())
             .setOrder(order)
             .setBusinessId(order.getEstablishmentId())
             .setMessage(userMessageEvent.message());
@@ -25,7 +25,7 @@ public class MessageMapper {
     @Nonnull
     public Message toModel(BusinessMessageEvent businessMessageEvent, Order order) {
         return new Message()
-            .setBusinessId(businessMessageEvent.businessId())
+            .setBusinessId(order.getEstablishmentId())
             .setOrder(order)
             .setUserId(order.getGuestId())
             .setMessage(businessMessageEvent.message());

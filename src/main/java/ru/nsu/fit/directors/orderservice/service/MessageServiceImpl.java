@@ -35,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
         Order order = orderService.findById(userMessageEvent.orderId())
             .orElseThrow(() -> new OrderNotFoundException(userMessageEvent.orderId()));
         messageRepository.save(messageMapper.toModel(userMessageEvent, order));
-        orderNotificationKafka.send(
+        /*orderNotificationKafka.send(
             NOTIFICATION_TOPIC,
             new BusinessOrderNotificationEvent(
                 order.getEstablishmentId(),
@@ -43,6 +43,8 @@ public class MessageServiceImpl implements MessageService {
                 "Received message from user"
             )
         );
+
+         */
     }
 
     @Override

@@ -23,6 +23,7 @@ import ru.nsu.fit.directors.orderservice.repository.OrderRepository;
 @RequiredArgsConstructor
 @ParametersAreNonnullByDefault
 public class MessageServiceImpl implements MessageService {
+    private static final String NOTIFICATION_TOPIC = "notificationTopic";
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
     private final OrderRepository orderService;
@@ -35,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
             .orElseThrow(() -> new OrderNotFoundException(userMessageEvent.orderId()));
         messageRepository.save(messageMapper.toModel(userMessageEvent, order));
         orderNotificationKafka.send(
-            "notificationTopic",
+            NOTIFICATION_TOPIC,
             new BusinessOrderNotificationEvent(
                 order.getEstablishmentId(),
                 order.getId(),
@@ -50,7 +51,7 @@ public class MessageServiceImpl implements MessageService {
             .orElseThrow(() -> new OrderNotFoundException(businessMessageEvent.orderId()));
         messageRepository.save(messageMapper.toModel(businessMessageEvent, order));
         notificationKafka.send(
-            "notificationTopic",
+            NOTIFICATION_TOPIC,
             new OrderNotificationEvent(
                 "Received message about booking",
                 order.getGuestId(),

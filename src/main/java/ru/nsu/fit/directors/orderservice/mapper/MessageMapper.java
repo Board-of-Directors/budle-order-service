@@ -5,6 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.springframework.stereotype.Component;
 import ru.nsu.fit.directors.orderservice.dto.response.MessageDto;
+import ru.nsu.fit.directors.orderservice.enums.SenderType;
 import ru.nsu.fit.directors.orderservice.event.BusinessMessageEvent;
 import ru.nsu.fit.directors.orderservice.event.UserMessageEvent;
 import ru.nsu.fit.directors.orderservice.model.Message;
@@ -18,6 +19,7 @@ public class MessageMapper {
         return new Message()
             .setUserId(order.getGuestId())
             .setOrder(order)
+            .setSenderType(SenderType.USER)
             .setBusinessId(order.getEstablishmentId())
             .setMessage(userMessageEvent.message());
     }
@@ -27,6 +29,7 @@ public class MessageMapper {
         return new Message()
             .setBusinessId(order.getEstablishmentId())
             .setOrder(order)
+            .setSenderType(SenderType.BUSINESS)
             .setUserId(order.getGuestId())
             .setMessage(businessMessageEvent.message());
     }
@@ -36,6 +39,7 @@ public class MessageMapper {
         return MessageDto.builder()
             .message(message.getMessage())
             .timestamp(message.getCreated())
+            .senderType(message.getSenderType())
             .build();
     }
 }

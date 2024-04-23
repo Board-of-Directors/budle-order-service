@@ -37,13 +37,18 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.modelmapper:modelmapper:3.1.1'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	implementation 'org.springframework.kafka:spring-kafka'
 	runtimeOnly 'com.netflix.eureka:eureka-client'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.zonky.test:embedded-database-spring-test:2.5.0'
+    testImplementation 'org.flywaydb.flyway-test-extensions:flyway-spring-test:10.0.0'
+    testImplementation 'org.flywaydb.flyway-test-extensions:flyway-dbunit-test:10.0.0'
+    testImplementation 'org.dbunit:dbunit:2.7.0'
+    testImplementation 'com.github.springtestdbunit:spring-test-dbunit:1.2.0'
 }
 
 springBoot {

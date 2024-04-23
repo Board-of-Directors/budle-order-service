@@ -22,9 +22,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.nsu.fit.directors.orderservice.dto.response.BaseResponse;
 import ru.nsu.fit.directors.orderservice.exception.BaseException;
-import ru.nsu.fit.directors.orderservice.exception.IncorrectOrderStatusException;
-import ru.nsu.fit.directors.orderservice.exception.NotEnoughRightsException;
-import ru.nsu.fit.directors.orderservice.exception.OrderNotFoundException;
 
 import java.util.LinkedHashMap;
 
@@ -32,13 +29,9 @@ import java.util.LinkedHashMap;
 public class ArticleController extends ResponseEntityExceptionHandler implements ResponseBodyAdvice<Object> {
     private static final String NOT_VALID_EXCEPTION = "notValidException";
 
-    @ExceptionHandler({
-        IncorrectOrderStatusException.class,
-        NotEnoughRightsException.class,
-        OrderNotFoundException.class
-    })
-    public <T extends BaseException> ResponseEntity<BaseResponse<Object>> handleException(T e) {
-        BaseResponse<Object> response = new BaseResponse<>(e.getMessage(), e.getType());
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<BaseResponse<Object>> handleException(BaseException exception) {
+        BaseResponse<Object> response = new BaseResponse<>(exception.getMessage(), exception.getType());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -92,7 +85,6 @@ public class ArticleController extends ResponseEntityExceptionHandler implements
         BaseResponse<Object> response = new BaseResponse<>(message, NOT_VALID_EXCEPTION);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
     @NonNull
     private String getDefaultMessage(BindException ex) {

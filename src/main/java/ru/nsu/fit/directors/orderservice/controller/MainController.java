@@ -14,9 +14,6 @@ import ru.nsu.fit.directors.orderservice.service.OrderService;
 
 import java.util.List;
 
-/**
- * Class, that represents order controller.
- */
 @RestController
 @RequestMapping(value = "order", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -24,24 +21,11 @@ public class MainController {
     private final OrderService orderService;
     private final MessageService messageService;
 
-    /**
-     * Internal get request for order by id.
-     *
-     * @param id identifier of seacrhed order
-     * @return order
-     */
     @GetMapping("/id")
     public UserResponseOrderDto getById(@RequestParam Long id) {
         return orderService.getById(id);
     }
 
-    /**
-     * Internal get request, that return all orders of current user.
-     *
-     * @param userId - from what user we need to find orders
-     * @param status - with what status we need to find orders
-     * @return list of order dto
-     */
     @GetMapping
     public List<UserResponseOrderDto> getByUser(
         @RequestParam Long userId,
@@ -49,14 +33,6 @@ public class MainController {
     ) {
         return orderService.getUserOrders(status, userId);
     }
-
-    /**
-     * Internal get request, that return all orders of the current establishment.
-     *
-     * @param establishmentId identifier of establishment that we fetch orders for
-     * @param status          (optional) what orders statuses we expected
-     * @return list of orders
-     */
 
     @GetMapping(value = "/establishment")
     public List<EstablishmentResponseOrderDto> getByEstablishment(

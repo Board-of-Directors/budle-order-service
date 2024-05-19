@@ -1,13 +1,17 @@
 package ru.nsu.fit.directors.orderservice.enums;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import ru.nsu.fit.directors.orderservice.exception.IncorrectOrderStatusException;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 @Getter
+@RequiredArgsConstructor
 public enum OrderStatus {
     WAITING(
         0,
@@ -15,6 +19,7 @@ public enum OrderStatus {
         Collections.emptyList(),
         "Пользователь %s создал бронь в вашем заведении.",
         false,
+        true,
         List.of(UserAction.CANCEL),
         List.of(BusinessAction.ACCEPT, BusinessAction.REJECT)
     ),
@@ -24,6 +29,7 @@ public enum OrderStatus {
         List.of(WAITING),
         "Администратор одобрил вашу бронь.",
         true,
+        false,
         List.of(UserAction.CANCEL),
         List.of(BusinessAction.REQUEST_CONFIRMATION, BusinessAction.REJECT)
     ),
@@ -33,6 +39,7 @@ public enum OrderStatus {
         List.of(WAITING),
         "Администратор отклонил вашу бронь.",
         true,
+        false,
         Collections.emptyList(),
         List.of(BusinessAction.ACCEPT)
     ),
@@ -42,6 +49,7 @@ public enum OrderStatus {
         List.of(ACCEPTED),
         "Администратор запросил подтверждение вашей брони. Подтвердите, что точно придете.",
         true,
+        false,
         List.of(UserAction.CANCEL, UserAction.CONFIRM),
         Collections.emptyList()
     ),
@@ -51,6 +59,7 @@ public enum OrderStatus {
         List.of(WAITING, ACCEPTED, WAITING_FOR_CONFIRMATION),
         "Пользователь %s отменил свою бронь.",
         false,
+        true,
         Collections.emptyList(),
         Collections.emptyList()
     ),
@@ -60,6 +69,7 @@ public enum OrderStatus {
         List.of(WAITING_FOR_CONFIRMATION),
         "Пользователь %s подтвердил, что точно придет.",
         false,
+        true,
         Collections.emptyList(),
         Collections.emptyList()
     ),
@@ -69,6 +79,7 @@ public enum OrderStatus {
         Collections.emptyList(),
         "Бронь была помещена в архив.",
         false,
+        true,
         Collections.emptyList(),
         Collections.emptyList()
     );
@@ -82,25 +93,7 @@ public enum OrderStatus {
     private final List<UserAction> userActions;
     private final List<BusinessAction> businessActions;
 
-    OrderStatus(
-        int status,
-        String message,
-        List<OrderStatus> allowedFrom,
-        String notification,
-        boolean allowedByEstablishment,
-        List<UserAction> userActions,
-        List<BusinessAction> businessActions
-    ) {
-        this.status = status;
-        this.message = message;
-        this.allowedFrom = allowedFrom;
-        this.notification = notification;
-        this.allowedByEstablishment = allowedByEstablishment;
-        this.allowedByUser = !allowedByEstablishment;
-        this.userActions = userActions;
-        this.businessActions = businessActions;
-    }
-
+    @Nonnull
     public static OrderStatus getStatusByInteger(Integer status) {
         for (OrderStatus orderStatus : OrderStatus.values()) {
             if (Objects.equals(orderStatus.status, status)) {

@@ -23,7 +23,6 @@ import java.sql.Time;
 @Getter
 @Setter
 @Table(name = "orders")
-@AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Order {

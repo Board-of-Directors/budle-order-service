@@ -42,6 +42,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	runtimeOnly 'com.netflix.eureka:eureka-client'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.zonky.test:embedded-database-spring-test:2.5.0'
